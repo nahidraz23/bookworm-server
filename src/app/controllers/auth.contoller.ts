@@ -5,13 +5,13 @@ import { generateToken } from "../utils/jwt";
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, photo } = req.body;
+    const { firstName, lastName, email, password, photo } = req.body;
 
-    if (!name || !email || !password) {
+    if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({ message: "All fields ae required" });
     }
 
-    const existingUser = await User.findOne(email);
+    const existingUser = await User.findOne({email});
     if (existingUser) {
       return res.status(409).json({ message: "Email already exists" });
     }
@@ -19,11 +19,14 @@ export const register = async (req: Request, res: Response) => {
     const hashedPassword = await hashPassword(password);
 
     const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-      photo,
+        firstName,
+        lastName,
+        email,
+        password : hashedPassword,
+        photo
     });
+
+    // console.log(user);
 
     res.status(201).json({
       message: "User registered successfully",
@@ -44,7 +47,7 @@ export const login = async (req: Request, res: Response) => {
         .json({ message: "Email and password is required" });
     }
 
-    const user = await User.findOne(email);
+    const user = await User.findOne({email})
     if (!user) {
       return res.status(401).json({ message: "Invalid Email" });
     }
@@ -60,6 +63,7 @@ export const login = async (req: Request, res: Response) => {
 
     res.status(200).json({
       message: "Login Successful",
+      token,
       user,
     });
   } catch (error) {
