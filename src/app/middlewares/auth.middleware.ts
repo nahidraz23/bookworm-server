@@ -3,12 +3,12 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { IAuthRequest } from "../interfaces/auth.interface";
 import { IJwtUserPayload } from "../interfaces/jwt.interface";
 
-export const protect = (
+export const auth = (
   req: IAuthRequest,
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = req.cookies?.token;
 
   if (!token) {
     return res.status(401).json({ message: "Unauthorized access" });
