@@ -100,6 +100,6 @@ export const getMe = async (req: any, res: Response) => {
     }
     res.json({ user });
   } catch (error) {
-    res.status(500).json({message: 'Server error', error})
+    res.status(500).json({ message: "Server error", error });
   }
 };
